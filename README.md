@@ -6,6 +6,7 @@
 $ git clone https://github.com/movie-it/movieit-server.git
 ```
 2. Add `credentials.json`.
+
 :bulb: for team members, check out the team slack channel.
 ```json
 {
