@@ -101,7 +101,6 @@ def detail(request, movie_cd, running_time=''):
       time = json.dumps(response_data["movieInfoResult"]["movieInfo"]["showTm"])
       return HttpResponse(time, content_type="text/json-comment-filtered")
     else: # 상세정보 전체
-      print('not running time')
       return Response(data=response_data)
   else:
     print("Error code: " + rescode)
