@@ -12,7 +12,9 @@ $ git clone https://github.com/movie-it/movieit-server.git
 {
   "SECRET_KEY": "PROJECT_SECRET_KEY",
   "MOVIE_API_KEY": "MOVIE_API_KEY",
-  "MOVIE_DETAIL_API_KEY": "MOVIE_DETAIL_API_KEY"
+  "MOVIE_DETAIL_API_KEY": "MOVIE_DETAIL_API_KEY",
+  "NAVER_CLIENT_ID": "NAVER_CLIENT_ID",
+  "NAVER_CLIENT_SECRET": "NAVER_CLIENT_SECRET"
 }
 ```
 3. Create and activate the virtual environment.
