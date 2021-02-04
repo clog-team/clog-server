@@ -11,7 +11,8 @@ $ git clone https://github.com/movie-it/movieit-server.git
 ```json
 {
   "SECRET_KEY": "PROJECT_SECRET_KEY",
-  "MOVIE_API_KEY": "MOVIE_API_KEY"
+  "MOVIE_API_KEY": "MOVIE_API_KEY",
+  "MOVIE_DETAIL_API_KEY": "MOVIE_DETAIL_API_KEY"
 }
 ```
 3. Install the requirements.
