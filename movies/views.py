@@ -39,7 +39,8 @@ def image(request, movie_name):
 
   if (rescode == 200):
     response_data = json.loads(response.read())
-    return Response(data=response_data)
+    image_url = response_data["items"][0]["image"] # Note: 첫 번째 검색 결과의 사진을 가져옴
+    return Response(data=image_url)
   else:
     print("Error code: " + rescode)
 
