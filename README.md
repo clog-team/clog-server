@@ -27,7 +27,7 @@ $ pipenv shell
 ```terminal
 $ python manage.py migrate
 ```
-6. Run the development server
+6. Run the development server.
 ```terminal
 $ python manage.py runserver
 ```
