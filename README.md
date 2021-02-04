@@ -15,14 +15,14 @@ $ git clone https://github.com/movie-it/movieit-server.git
   "MOVIE_DETAIL_API_KEY": "MOVIE_DETAIL_API_KEY"
 }
 ```
-3. Install the requirements.
-```terminal
-$ pip install -r requirements.txt
-```
-4. Create and activate the virtual environment.
+3. Create and activate the virtual environment.
 ```terminal
 $ pip install pipenv
 $ pipenv shell
+```
+4. Install the requirements.
+```terminal
+$ pip install -r requirements.txt
 ```
 5. Create the database.
 ```terminal
