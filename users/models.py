@@ -10,12 +10,12 @@ class Badge(models.Model):
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
 
-
+  
 # User 모델과 대응하는 프로필(프로필 사진을 등록하기 위함)
 class Profile(models.Model):
   user = models.OneToOneField(User, on_delete=models.CASCADE)
   image = models.TextField(default="https://avatars.githubusercontent.com/u/78534587?s=200&v=4") # 프로필 사진
-  friends = models.ManyToManyField("self", through="UserFriend", symmetrical=True, related_name="friend")
+  friends = models.ManyToManyField("self", through="UserFriend", symmetrical=False)
   badges = models.ManyToManyField(Badge)
 
   @receiver(post_save, sender=User)
@@ -28,7 +28,12 @@ class Profile(models.Model):
       instance.profile.save()
 
 
-# ??????
 class UserFriend(models.Model):
+  source = models.ForeignKey(User, related_name = 'source', on_delete=models.CASCADE)
+  target = models.ForeignKey(User, related_name = 'target', on_delete=models.CASCADE)
   intimacy = models.IntegerField() # 관계점수
+
+  class Meta:
+      unique_together = ('source', 'target')
+
 
