@@ -25,6 +25,9 @@ class Record(models.Model):
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
 
+  class Meta:
+      ordering = ('created_at',)
+
 
 # 위시리스트
 class Wishlist(models.Model):

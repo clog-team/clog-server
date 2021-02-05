@@ -25,3 +25,11 @@ class PredictionSerializer(serializers.ModelSerializer):
           "movie": data,
           "friendUserId": obj.source.id
         }
+
+class RecordSerializer(serializers.ModelSerializer):
+    thumbnailUrl = serializers.ReadOnlyField(source='movie.thumbnail_url')
+    movieName = serializers.ReadOnlyField(source='movie.title')
+
+    class Meta:
+      model = Record
+      fields = ('thumbnailUrl', 'movieName', 'rating', 'comment')
