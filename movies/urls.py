@@ -11,4 +11,5 @@ urlpatterns = [
   path('recommend/', recommend, name="recommend"),
   # path('pending/', prediction, name="prediction"),
   url(r'^pending/$', prediction),
+  url(r'^record/$', record),
 ]

@@ -1,9 +1,9 @@
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .serializers import *
 import urllib.request as ul
-import os, json, ssl
+import os, json, ssl, pdb
 from urllib.parse import quote
 from pathlib import Path
 from django.http import HttpRequest, HttpResponse
@@ -89,7 +89,7 @@ def search(request, movie_name):
 
 # 영화 상세정보
 @api_view(['GET'])
-def detail(request, movie_cd, running_time=''):
+def detail(request, movie_cd, specific=''):
   key = get_api_key("detail")
   
   url = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/movie/searchMovieInfo.json?key={}&movieCd={}".format(key, movie_cd)
@@ -102,9 +102,12 @@ def detail(request, movie_cd, running_time=''):
   if (rescode == 200):
     response_data = json.loads(response.read())
 
-    if running_time is 'running_time': # 상영시간 정보
+    if specific is 'running_time': # 상영시간 정보
       time = json.dumps(response_data["movieInfoResult"]["movieInfo"]["showTm"])
       return HttpResponse(time, content_type="text/json-comment-filtered")
+    elif specific is 'title': # 영화제목
+      title = json.dumps(response_data["movieInfoResult"]["movieInfo"]["movieNm"])
+      return HttpResponse(title, content_type="text/json-comment-filtered")
     else: # 상세정보 전체
       return Response(data=response_data)
   else:
@@ -324,3 +327,50 @@ def recent(request):
 
   ret_json_obj = {"items": items}
   return Response(data=ret_json_obj)
+
+
+@api_view(['GET', 'post'])
+def record(request):
+    # 나의 기록 목록
+    if request.method == 'GET':
+        user_id = request.GET.get('uid')
+        current_user = get_object_or_404(User, pk=user_id)
+
+        queryset = Record.objects.all().filter(user=current_user)
+        serializer = RecordSerializer(queryset, many=True)
+
+        reviews = []
+
+        for data in serializer.data:
+          data = data["movie"]
+          print(data)
+
+          record = {}
+          record["thumbnailUrl"] = data["thumbnailUrl"]
+          record["movie_name"] = data["movieName"]
+          record["rating"] = data["rating"]
+          record["comment"] = data["comment"]
+
+          reviews.append(record)
+        
+        ret_json_obj = {"reviews": reviews}
+        return Response(data=ret_json_obj)
+    
+    # 새로운 기록
+    elif request.method == 'POST':
+        user_id = request.POST.get('uid')
+        current_user = get_object_or_404(User, pk=user_id)
+        movie_cd = request.POST.get('movieCode')
+        count = Movie.objects.filter(movie_code=movie_cd).count() # db에 저장되어 있는 영화인지 확인
+        if count == 0:
+            # db에 영화 정보 저장
+            print(json.loads(detail(request._request, movie_cd, 'title').content))
+        
+        movie = Movie.objects.get(movie_code=movie_cd)
+        rating = request.POST.get('rating')
+        comment = request.POST.get('comment')
+        recommend = request.POST.get('recommend')
+
+        # 기록 생성
+        Record.objects.create(user=current_user, movie=movie, rating=rating, comment=comment, recommend=recommend)
+
