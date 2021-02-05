@@ -197,7 +197,7 @@ def recent(request):
 
   for i in range(5):
       movie = {}
-      movie["movieCode"] = f'2021021{i}'
+      movie["movieCode"] = f'2021021'
       items.append(movie)
 
   items[0]["thumbnailUrl"] = "https://ssl.pstatic.net/imgmovie/mdi/mit110/1917/191735_P01_110003.jpg"
