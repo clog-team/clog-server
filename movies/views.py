@@ -118,8 +118,29 @@ def prediction(request):
     source_user_id = request.GET.get('uid')
     queryset = Prediction.objects.all().filter(target=source_user_id)
     serializer = PredictionSerializer(queryset, many=True)
+
+    items = []
+
+    for data in serializer.data:
+      data = data["movie"]
+      print(data)
+
+      movie = {}
+      movie["movieCode"] = data["movieCode"]
+      movie["thumbnailUrl"] = data["thumbnailUrl"]
+      movie["movie_name"] = data["movieName"]
+      if type(data["directors"]) is list:
+        movie["directors"] = data["directors"]
+      else:
+        movie["directors"] = [data["directors"]]
+      movie["opening_date"] = data["openingDate"]
+      movie["genre"] = data["genre"]
+      movie["running_time"] = data["runningTime"]
+      movie["rating"] = "9.39"
+
+      items.append(movie)
     
-    ret_json_obj = {"items": serializer.data}
+    ret_json_obj = {"items": items}
     return Response(data=ret_json_obj)
 
   # 예측 생성(TODO)
@@ -138,6 +159,63 @@ def prediction(request):
       serializer.save()
       return Response(serializer.data, status=status.HTTP_201_CREATE)
     return Reesponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# recommend
+@api_view(['GET'])
+def recommend(request):
+  items = []
+
+  for i in range(5):
+    movie = {}
+    movie["movieCode"] = f'2021021{i+5}'
+    items.append(movie)
+
+  # 인셉션 인터스텔라 라라랜드 겨울왕국 조커
+  items[0]["thumbnailUrl"] = "https://ssl.pstatic.net/imgmovie/mdi/mit110/1917/191735_P01_110003.jpg"
+  items[0]["movie_name"] = "인셉션"
+  items[0]["directors"] = [{"peopleNm": "크리스토퍼 놀란"}]
+  items[0]["opening_date"] = "20100721"
+  items[0]["genre"] = "드라마"
+  items[0]["running_time"] = 147
+  items[0]["rating"] = "9.61"
+
+  items[1]["thumbnailUrl"] = "https://movie-phinf.pstatic.net/20160106_138/1452044846608eaFcJ_JPEG/movie_image.jpg"
+  items[1]["movie_name"] = "인터스텔라"
+  items[1]["directors"] = [{"peopleNm": "크리스토퍼 놀란"}]
+  items[1]["opening_date"] = "20141106"
+  items[1]["genre"] = "SF"
+  items[1]["running_time"] = 169
+  items[1]["rating"] = "9.12"
+
+  items[2]["thumbnailUrl"] = "https://ssl.pstatic.net/imgmovie/mdi/mit110/1676/167613_P09_182225.jpg"
+  items[2]["movie_name"] = "조커"
+  items[2]["directors"] = [{"peopleNm": "토드 필립스"}]
+  items[2]["opening_date"] = "20191002"
+  items[2]["genre"] = "액션"
+  items[2]["running_time"] = 122
+  items[2]["rating"] = "8.97"
+
+  items[3]["thumbnailUrl"] = "https://movie-phinf.pstatic.net/20201229_146/1609226288425JgdsP_JPEG/movie_image.jpg"
+  items[3]["movie_name"] = "라라랜드"
+  items[3]["directors"] = [{"peopleNm": "데이미언 셔젤"}]
+  items[3]["opening_date"] = "20161207"
+  items[3]["genre"] = "드라마"
+  items[3]["running_time"] = 127
+  items[3]["rating"] = "8.91"
+
+  items[4]["thumbnailUrl"] = "https://movie-phinf.pstatic.net/20170418_82/1492496178995pHxdA_JPEG/movie_image.jpg"
+  items[4]["movie_name"] = "겨울왕국"
+  items[4]["directors"] = [{"peopleNm": "크리스 벅"}]
+  items[4]["opening_date"] = "20140116"
+  items[4]["genre"] = "애니메이션"
+  items[4]["running_time"] = 108
+  items[4]["rating"] = "9.20"
+
+
+  ret_json_obj = {"items": items}
+
+  return Response(data=ret_json_obj)
 
 # old
 @api_view(['GET'])
