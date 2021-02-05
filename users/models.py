@@ -23,6 +23,13 @@ class Profile(models.Model):
       if created:
           Profile.objects.create(user=instance)
 
+          other_users = User.objects.all()
+          current_user = instance
+          for user in other_users: # Note: 자기 자신을 제외한 모든이와 친구
+              if user != current_user:
+                  UserFriend.objects.create(source=instance, target=user, intimacy=0)
+                  UserFriend.objects.create(source=user, target=instance, intimacy=0)
+
   @receiver(post_save, sender=User)
   def save_user_profile(sender, instance, **kwargs):
       instance.profile.save()
@@ -33,7 +40,5 @@ class UserFriend(models.Model):
   target = models.ForeignKey(User, related_name = 'target', on_delete=models.CASCADE)
   intimacy = models.IntegerField() # 관계점수
 
-  class Meta:
-      unique_together = ('source', 'target')
 
 
