@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'rest_framework',
     'movies',
+    'users',
 
     # allauth 관련 설정
     'allauth',
