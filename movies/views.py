@@ -1,13 +1,14 @@
-# from django.contrib.auth.models import User, Group
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from movies.serializers import *
+from .serializers import *
 import urllib.request as ul
 import os, json, ssl
 from urllib.parse import quote
 from pathlib import Path
 from django.http import HttpRequest, HttpResponse
+from .models import *
+from django.shortcuts import get_object_or_404
 
 # 영화진흥위원회 api key
 def get_api_key(type):
@@ -40,7 +41,6 @@ def image(request, movie_name):
 
   if (rescode == 200):
     response_data = json.loads(response.read())
-    print(response_data["items"][0]["image"])
     image_url = json.dumps(response_data["items"][0]["image"]) # Note: 첫 번째 검색 결과의 사진을 가져옴
     return HttpResponse(image_url, content_type="text/json-comment-filtered")
   else:
@@ -105,7 +105,35 @@ def detail(request, movie_cd, running_time=''):
       return Response(data=response_data)
   else:
     print("Error code: " + rescode)
+  
 
+@api_view(['GET', 'post'])
+def prediction(request):
+  # 나의 평가를 기다리는 친구의 요청
+  if request.method == 'GET':
+    source_user_id = request.GET.get('uid')
+    queryset = Prediction.objects.all().filter(target=source_user_id)
+    serializer = PredictionSerializer(queryset, many=True)
+    
+    ret_json_obj = {"items": serializer.data}
+    return Response(data=ret_json_obj)
+
+  # 예측 생성(TODO)
+  elif request.method == 'POST':
+    # movie_id = request.POST.get('movieCode')
+    # source_user_id = request.POST.get('sourceUid')
+    # target_user_id = request.POST.get('targetUid')
+    # rating = request.POST.get('rating')
+    
+    # source_user = get_object_or_404(User, pk=source_user_id)
+    # target_user = get_object_or_404(User, pk=target_user_id)
+    # movie = get_object_or_404(Movie, pk=movie_id)
+    # Prediction.objects.create(source=source_user, target=target_user, value=rating)
+    serializer = PredictionSerializer(data=request.data)
+    if serializer.is_valid():
+      serializer.save()
+      return Response(serializer.data, status=status.HTTP_201_CREATE)
+    return Reesponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # old
 @api_view(['GET'])
