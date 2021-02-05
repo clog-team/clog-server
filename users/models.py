@@ -6,7 +6,7 @@ from django.db.models.signals import post_save
 # User 모델과 대응하는 프로필(프로필 사진을 등록하기 위함)
 class Profile(models.Model):
   user = models.OneToOneField(User, on_delete=models.CASCADE)
-  image = models.ImageField(verbose_name="Image of User", upload_to="image/", default="movie-it-logo.png") # 프로필 사진
+  image = models.TextField(default="https://avatars.githubusercontent.com/u/78534587?s=200&v=4") # 프로필 사진
   friends = models.ManyToManyField("self", through="UserFriend", symmetrical=False)
 
   @receiver(post_save, sender=User)
