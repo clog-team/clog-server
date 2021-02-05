@@ -26,7 +26,7 @@ def get_api_key(type):
 
 # 영화 이미지 url
 @api_view(['GET'])
-def image(request, movie_name):
+def naver_api(request, movie_name):
   client_id, client_secret = get_api_key("image")
   query = quote(movie_name)
 
@@ -41,8 +41,10 @@ def image(request, movie_name):
 
   if (rescode == 200):
     response_data = json.loads(response.read())
-    image_url = json.dumps(response_data["items"][0]["image"]) # Note: 첫 번째 검색 결과의 사진을 가져옴
-    return HttpResponse(image_url, content_type="text/json-comment-filtered")
+    image_url = json.dumps(response_data["items"][0]["image"]).replace('"', "") # Note: 첫 번째 검색 결과의 사진을 가져옴
+    rating = json.dumps(response_data["items"][0]["userRating"]).replace('"', "")
+    ret_json_obj = {'image_url': image_url, 'rating': rating}
+    return HttpResponse(json.dumps(ret_json_obj))
   else:
     print("Error code: " + rescode)
 
@@ -69,12 +71,14 @@ def search(request, movie_name):
     for i in range(response_data["movieListResult"]["totCnt"]):
       movie = {}
       movie["movieCode"] = movie_list[i]["movieCd"]
-      movie["thumbnailUrl"] = json.loads(image(request._request, movie_list[i]["movieNm"]).content)
+      naver_api_result = json.loads(naver_api(request._request, movie_list[i]["movieNm"]).content)
+      movie["thumbnailUrl"] = naver_api_result["image_url"]
       movie["movie_name"] = movie_list[i]["movieNm"]
       movie["directors"] = movie_list[i]["directors"]
       movie["opening_date"] = movie_list[i]["openDt"]
       movie["genre"] = movie_list[i]["repGenreNm"]
       movie["running_time"] = int(json.loads(detail(request._request, movie_list[i]["movieCd"], 'running_time').content))
+      movie["rating"] = naver_api_result["rating"]
       items.append(movie)
 
     ret_json_obj = {"items": items}

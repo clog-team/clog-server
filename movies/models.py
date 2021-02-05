@@ -10,7 +10,7 @@ class Movie(models.Model):
   thumbnail_url = models.TextField() # 사진
   genre = models.CharField(max_length=200) # 장르
   running_time = models.IntegerField() # 상영시간
-  average_rating = models.DecimalField(max_digits=6, decimal_places=2) # 전체 평점 평균
+  average_rating = models.DecimalField(max_digits=6, decimal_places=2) # 네이버 api 평점
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
 

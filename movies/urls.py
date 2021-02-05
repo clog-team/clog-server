@@ -5,7 +5,7 @@ from django.conf.urls import url
 urlpatterns = [
   path('search/<str:movie_name>/', search, name="search"),
   path('detail/<int:movie_cd>/', detail, name="detail"),
-  path('image/<str:movie_name>/', image, name="image"),
+  path('naver_api/<str:movie_name>/', naver_api, name="naver_api"),
   path('old/', old, name="old"),
   path('recent/', recent, name="recent"),
   # path('pending/', prediction, name="prediction"),
