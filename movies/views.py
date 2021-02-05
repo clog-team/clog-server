@@ -40,6 +40,7 @@ def image(request, movie_name):
 
   if (rescode == 200):
     response_data = json.loads(response.read())
+    print(response_data["items"][0]["image"])
     image_url = json.dumps(response_data["items"][0]["image"]) # Note: 첫 번째 검색 결과의 사진을 가져옴
     return HttpResponse(image_url, content_type="text/json-comment-filtered")
   else:
@@ -104,3 +105,112 @@ def detail(request, movie_cd, running_time=''):
       return Response(data=response_data)
   else:
     print("Error code: " + rescode)
+
+
+# old
+@api_view(['GET'])
+def old(request):
+  items = []
+
+  for i in range(5):
+    movie = {}
+    movie["movieCode"] = f'2021021{i+5}'
+    items.append(movie)
+
+  items[0]["thumbnailUrl"] = "https://movie-phinf.pstatic.net/20210107_160/1609984702837oNdmw_JPEG/movie_image.jpg"
+  items[0]["movie_name"] = "소울"
+  items[0]["directors"] = [{"peopleNm": "피트 닥터"}]
+  items[0]["opening_date"] = "20210120"
+  items[0]["genre"] = "애니메이션"
+  items[0]["running_time"] = 107
+  items[0]["rating"] = "9.37"
+
+  items[1]["thumbnailUrl"] = "https://search.pstatic.net/common?type=o&amp;size=82x111&amp;quality=100&amp;direct=true&amp;src=https%3A%2F%2Fs.pstatic.net%2Fmovie.phinf%2F20210126_174%2F1611638248803840HH_JPEG%2Fmovie_image.jpg"
+  items[1]["movie_name"] = "극장판 귀멸의 칼날: 무한열차편"
+  items[1]["directors"] = [{"peopleNm": "소토자키 하루오"}]
+  items[1]["opening_date"] = "20210127"
+  items[1]["genre"] = "애니메이션"
+  items[1]["running_time"] = 117
+  items[1]["rating"] = "9.63"
+
+  items[2]["thumbnailUrl"] = "https://ssl.pstatic.net/imgmovie/mdi/mit110/1960/196055_P08_174636.jpg"
+  items[2]["movie_name"] = "어니스트 씨프"
+  items[2]["directors"] = [{"peopleNm": "마크 윌리엄스"}]
+  items[2]["opening_date"] = "20210203"
+  items[2]["genre"] = "액션"
+  items[2]["running_time"] = 98
+  items[2]["rating"] = "9.56"
+
+  items[3]["thumbnailUrl"] = "https://movie-phinf.pstatic.net/20210111_41/1610333478672K6ihS_JPEG/movie_image.jpg"
+  items[3]["movie_name"] = "해피 투게더"
+  items[3]["directors"] = [{"peopleNm": "왕가위"}]
+  items[3]["opening_date"] = "20210204"
+  items[3]["genre"] = "드라마"
+  items[3]["running_time"] = 97
+  items[3]["rating"] = "9.48"
+
+  items[4]["thumbnailUrl"] = "https://movie-phinf.pstatic.net/20210114_78/1610588407942CoL2I_JPEG/movie_image.jpg"
+  items[4]["movie_name"] = "세자매"
+  items[4]["directors"] = [{"peopleNm": "이승원"}]
+  items[4]["opening_date"] = "20210127"
+  items[4]["genre"] = "드라마"
+  items[4]["running_time"] = 115
+  items[4]["rating"] = "8.91"
+
+
+  ret_json_obj = {"items": items}
+
+  return Response(data=ret_json_obj)
+
+
+@api_view(['GET'])
+def recent(request):
+  items = []
+
+  for i in range(5):
+      movie = {}
+      movie["movieCode"] = f'2021021{i}'
+      items.append(movie)
+
+  items[0]["thumbnailUrl"] = "https://ssl.pstatic.net/imgmovie/mdi/mit110/1917/191735_P01_110003.jpg"
+  items[0]["movie_name"] = "인셉션"
+  items[0]["directors"] = [{"peopleNm": "크리스토퍼 놀란"}]
+  items[0]["opening_date"] = "20100721"
+  items[0]["genre"] = "드라마"
+  items[0]["running_time"] = 147
+  items[0]["rating"] = "9.61"
+
+  items[1]["thumbnailUrl"] = "https://movie-phinf.pstatic.net/20160106_138/1452044846608eaFcJ_JPEG/movie_image.jpg"
+  items[1]["movie_name"] = "인터스텔라"
+  items[1]["directors"] = [{"peopleNm": "크리스토퍼 놀란"}]
+  items[1]["opening_date"] = "20141106"
+  items[1]["genre"] = "SF"
+  items[1]["running_time"] = 169
+  items[1]["rating"] = "9.12"
+
+  items[2]["thumbnailUrl"] = "https://movie-phinf.pstatic.net/20160901_187/1472711688297YP2jH_JPEG/movie_image.jpg"
+  items[2]["movie_name"] = "포레스트 검프"
+  items[2]["directors"] = [{"peopleNm": "로버트 저메키스"}]
+  items[2]["opening_date"] = "19941015"
+  items[2]["genre"] = "드라마"
+  items[2]["running_time"] = 142
+  items[2]["rating"] = "9.52"
+
+  items[3]["thumbnailUrl"] = "https://ssl.pstatic.net/imgmovie/mdi/mit110/1676/167613_P09_182225.jpg"
+  items[3]["movie_name"] = "조커"
+  items[3]["directors"] = [{"peopleNm": "토드 필립스"}]
+  items[3]["opening_date"] = "20191002"
+  items[3]["genre"] = "액션"
+  items[3]["running_time"] = 122
+  items[3]["rating"] = "8.97"
+
+  items[4]["thumbnailUrl"] = "https://movie-phinf.pstatic.net/20111223_57/13245799126671QMbI_JPEG/movie_image.jpg"
+  items[4]["movie_name"] = "타짜"
+  items[4]["directors"] = [{"peopleNm": "최동훈"}]
+  items[4]["opening_date"] = "20060928"
+  items[4]["genre"] = "범죄"
+  items[4]["running_time"] = 139
+  items[4]["rating"] = "9.19"
+
+  ret_json_obj = {"items": items}
+  return Response(data=ret_json_obj)
