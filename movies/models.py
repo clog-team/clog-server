@@ -32,3 +32,13 @@ class Wishlist(models.Model):
   movie = models.ForeignKey(Movie, on_delete=models.CASCADE) # 영화
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
+
+
+# 예측
+class Prediction(models.Model):
+  source = models.ForeignKey(User, related_name = 'source_user', on_delete=models.CASCADE) # 평가를 요청한 사람
+  target = models.ForeignKey(User, related_name = 'target_user', on_delete=models.CASCADE) # 평가를 받은 사람
+  movie = models.ForeignKey(Movie, on_delete=models.CASCADE) # 영화
+  value = models.IntegerField() # 예측평점
+  created_at = models.DateTimeField(auto_now_add=True)
+  updated_at = models.DateTimeField(auto_now=True)
