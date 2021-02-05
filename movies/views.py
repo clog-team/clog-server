@@ -146,20 +146,23 @@ def prediction(request):
     ret_json_obj = {"items": items}
     return Response(data=ret_json_obj)
 
-  # 예측 생성(TODO)
+  # 예측 생성
   elif request.method == 'POST':
-    # movie_id = request.POST.get('movieCode')
-    # source_user_id = request.POST.get('sourceUid')
-    # target_user_id = request.POST.get('targetUid')
-    # rating = request.POST.get('rating')
-    
-    # source_user = get_object_or_404(User, pk=source_user_id)
-    # target_user = get_object_or_404(User, pk=target_user_id)
-    # movie = get_object_or_404(Movie, pk=movie_id)
-    # Prediction.objects.create(source=source_user, target=target_user, value=rating)
-    serializer = PredictionSerializer(data=request.data)
+    data = request.data
+    movie_cd = data['movieCode']
+    source_user_id = data['sourceUid']
+    target_user_id = data['targetUid']
+    value = data['rating']
+
+    source_user = get_object_or_404(User, pk=source_user_id)
+    target_user = get_object_or_404(User, pk=target_user_id)
+    movie = Movie.objects.get(movie_code=movie_cd)
+
+    Prediction.objects.create(source=source_user, target=target_user, movie=movie, value=value)
+    prediction = Prediction.objects.last()
+
+    serializer = PredictionSerializer(data=prediction)
     if serializer.is_valid():
-      serializer.save()
       return Response(serializer.data, status=status.HTTP_201_CREATE)
     return Reesponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
