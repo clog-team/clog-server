@@ -10,9 +10,10 @@ class Movie(models.Model):
   thumbnail_url = models.TextField() # 사진
   genre = models.CharField(max_length=200) # 장르
   running_time = models.IntegerField() # 상영시간
-  average_rating = models.DecimalField(max_digits=2, decimal_places=2) # 사용자 평점 평균
+  average_rating = models.DecimalField(max_digits=2, decimal_places=2) # 전체 평점 평균
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
+
 
 # 기록
 class Record(models.Model):
@@ -20,8 +21,10 @@ class Record(models.Model):
   movie = models.ForeignKey(Movie, on_delete=models.CASCADE) # 영화
   rating = models.IntegerField() # 평점
   comment = models.TextField() # 코멘트(한줄평)
+  recommend = models.IntegerField() # 추천여부(0: 추천하지 않음, 1: 추천함)
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
+
 
 # 위시리스트
 class Wishlist(models.Model):
