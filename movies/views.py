@@ -361,18 +361,18 @@ def record(request):
     
     # 새로운 기록
     elif request.method == 'POST':
-        user_id = request.POST.get('uid')
+        user_id = request.data['uid']
         current_user = get_object_or_404(User, pk=user_id)
-        movie_cd = request.POST.get('movieCode')
+        movie_cd = request.data['movieCode']
         count = Movie.objects.filter(movie_code=movie_cd).count() # db에 저장되어 있는 영화인지 확인
         if count == 0:
             # db에 영화 정보 저장
             print(json.loads(detail(request._request, movie_cd, 'title').content))
         
         movie = Movie.objects.get(movie_code=movie_cd)
-        rating = request.POST.get('rating')
-        comment = request.POST.get('comment')
-        recommend = request.POST.get('recommend')
+        rating = request.data['rating']
+        comment = request.data['comment']
+        recommend = request.data['recommend']
 
         # 기록 생성
         Record.objects.create(user=current_user, movie=movie, rating=rating, comment=comment, recommend=recommend)
